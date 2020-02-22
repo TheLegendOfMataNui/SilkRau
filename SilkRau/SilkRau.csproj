@@ -64,7 +64,9 @@
     <Compile Include="FileConverters\SLBToYamlConverter.cs" />
     <Compile Include="FileConverters\YamlToSLBConverter.cs" />
     <Compile Include="FileFormat.cs" />
+    <Compile Include="FileTypeRegistry.cs" />
     <Compile Include="IFileConverter.cs" />
+    <Compile Include="InvalidFileTypeException.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
