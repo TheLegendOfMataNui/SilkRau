@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileConverters\SLBToYamlConverterTests.cs" />
+    <Compile Include="FileConverters\YamlToSLBConverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
