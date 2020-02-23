@@ -70,6 +70,7 @@
     <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
+    <Compile Include="Options\PrintOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
