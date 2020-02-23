@@ -61,11 +61,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileConverterFactory.cs" />
     <Compile Include="FileConverters\SLBToYamlConverter.cs" />
     <Compile Include="FileConverters\YamlToSLBConverter.cs" />
     <Compile Include="FileFormat.cs" />
     <Compile Include="FileTypeRegistry.cs" />
     <Compile Include="IFileConverter.cs" />
+    <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
