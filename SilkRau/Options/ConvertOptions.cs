@@ -5,11 +5,12 @@
  */
 using CommandLine;
 
-namespace SilkRau
+namespace SilkRau.Options
 {
-    internal sealed class Options
+    [Verb("convert", HelpText = "Converts a file from a format to another.")]
+    internal sealed class ConvertOptions
     {
-        public Options(string fileType, FileFormat inputFormat, string inputFile, FileFormat outputFormat, string outputFile)
+        public ConvertOptions(string fileType, FileFormat inputFormat, string inputFile, FileFormat outputFormat, string outputFile)
         {
             FileType = fileType;
             InputFormat = inputFormat;
