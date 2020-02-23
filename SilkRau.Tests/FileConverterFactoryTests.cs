@@ -4,70 +4,69 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
-using SAGESharp.IO;
-using SilkRau.FileConverters;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SilkRau.Tests
 {
     class FileConverterFactoryTests
     {
-        [Test]
-        public void Test_Creating_A_Converter_From_SLB_To_Yaml()
+        private static readonly FileConversion validFileConversion = new FileConversion(
+            inputFileFormat: FileFormat.SLB, outputFileFormat: FileFormat.Yaml
+        );
+
+        private readonly IReadOnlyDictionary<FileConversion, FileConverterProvider>
+            conversions;
+
+        private readonly IFileConverterFactory factory;
+
+        public FileConverterFactoryTests()
         {
-            FileConverterFactory factory = new FileConverterFactory(
-                fileType: typeof(MockSLBType),
-                inputFormat: FileFormat.SLB,
-                outputFormat: FileFormat.Yaml
-            );
+            conversions = new Dictionary<FileConversion, FileConverterProvider>
+            {
+                [validFileConversion] = Substitute.For<FileConverterProvider>()
+            };
 
-            IFileConverter result = factory.BuildFileConverter();
-
-            result.Should()
-                .NotBeNull()
-                .And
-                .BeOfType<SLBToYamlConverter<MockSLBType>>();
-        }
-
-
-        [Test]
-        public void Test_Creating_A_Converter_From_Yaml_To_SBL()
-        {
-            FileConverterFactory factory = new FileConverterFactory(
-                fileType: typeof(MockSLBType),
-                inputFormat: FileFormat.Yaml,
-                outputFormat: FileFormat.SLB
-            );
-
-            IFileConverter result = factory.BuildFileConverter();
-
-            result.Should()
-                .NotBeNull()
-                .And
-                .BeOfType<YamlToSLBConverter<MockSLBType>>();
-        }
-
-        private class MockSLBType
-        {
-            [SerializableProperty(0)]
-            public int Value { get; set; }
+            factory = new FileConverterFactory(conversions);
         }
 
         [Test]
-        public void Test_Creating_A_Converter_For_An_Invalid_Pair_Of_Formats()
+        public void Test_The_Valid_Conversions_Are_As_Expected()
         {
-            FileConverterFactory factory = new FileConverterFactory(
-                fileType: typeof(MockSLBType),
-                inputFormat: FileFormat.SLB,
-                outputFormat: FileFormat.SLB
+            ISet<FileConversion> result = factory.ValidConversions;
+
+            result.Count.Should().Be(conversions.Keys.Count());
+            result.SetEquals(conversions.Keys).Should().BeTrue();
+        }
+
+        [Test]
+        public void Test_Creating_A_Converter_For_A_Valid_Conversion()
+        {
+            IFileConverter fileConverter = Substitute.For<IFileConverter>();
+            Type fileType = typeof(string);
+
+            conversions[validFileConversion].Invoke(fileType).Returns(fileConverter);
+
+            IFileConverter result = factory.BuildFileConverter(fileType, validFileConversion);
+
+            result.Should().BeSameAs(fileConverter);
+        }
+
+        [Test]
+        public void Test_Creating_A_Converter_For_An_Invalid_FileConversion()
+        {
+            FileConversion fileConversion = new FileConversion(
+                    inputFileFormat: FileFormat.SLB,
+                    outputFileFormat: FileFormat.SLB
             );
-            Action action = () => factory.BuildFileConverter();
+            Action action = () => factory.BuildFileConverter(typeof(string), fileConversion);
 
             action.Should()
                 .ThrowExactly<InvalidConversionException>()
-                .Where(exception => exception.InputFormat == FileFormat.SLB)
-                .Where(exception => exception.OutputFormat == FileFormat.SLB);
+                .Where(exception => exception.FileConversion == fileConversion);
         }
     }
 }

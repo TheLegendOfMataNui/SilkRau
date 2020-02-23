@@ -9,15 +9,12 @@ namespace SilkRau
 {
     internal sealed class InvalidConversionException : Exception
     {
-        public InvalidConversionException(FileFormat inputFileFormat, FileFormat outputFileFormat)
-            : base($"Invalid conversion from {inputFileFormat} to {outputFileFormat}")
+        public InvalidConversionException(FileConversion fileConversion)
+            : base($"Invalid conversion from {fileConversion.InputFileFormat} to {fileConversion.OutputFileFormat}")
         {
-            InputFormat = inputFileFormat;
-            OutputFormat = outputFileFormat;
+            FileConversion = fileConversion;
         }
 
-        public FileFormat InputFormat { get; }
-
-        public FileFormat OutputFormat { get; }
+        public FileConversion FileConversion { get; }
     }
 }
