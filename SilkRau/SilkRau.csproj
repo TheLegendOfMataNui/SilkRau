@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileConversion.cs" />
     <Compile Include="FileConverterFactory.cs" />
     <Compile Include="FileConverters\SLBToYamlConverter.cs" />
     <Compile Include="FileConverters\YamlToSLBConverter.cs" />
