@@ -68,6 +68,7 @@
     <Compile Include="FileFormat.cs" />
     <Compile Include="FileTypeRegistry.cs" />
     <Compile Include="IFileConverter.cs" />
+    <Compile Include="IFileConverterFactory.cs" />
     <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
