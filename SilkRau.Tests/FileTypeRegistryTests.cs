@@ -6,11 +6,24 @@
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Linq;
 
 namespace SilkRau.Tests
 {
     class FileTypeRegistryTests
     {
+        [Test]
+        public void Test_Getting_The_Type_From_A_Valid_FileType()
+        {
+             string supportedFileType = FileTypeRegistry
+                .SupportedFileTypes
+                .First();
+
+            Type result = FileTypeRegistry.GetTypeForFileType(supportedFileType);
+
+            result.Should().NotBeNull();
+        }
+
         [Test]
         public void Test_Getting_The_Type_From_An_Invalid_FileType()
         {
