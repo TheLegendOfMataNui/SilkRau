@@ -3,6 +3,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+using CommandLine;
+using Ninject;
+using SilkRau.Ninject;
 using SilkRau.Options;
 using System;
 using System.IO;
@@ -27,8 +30,20 @@ namespace SilkRau
             this.textWriter = textWriter;
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            IKernel kernel = new StandardKernel(
+                new CommandLineModule(),
+                new FileConvertersModule(),
+                new ProgramModule()
+            );
+
+            Program program = kernel.Get<Program>();
+            Parser parser = kernel.Get<Parser>();
+
+            parser.ParseArguments<ConvertOptions, PrintOptions>(args)
+                .WithParsed<ConvertOptions>(program.Run)
+                .WithParsed<PrintOptions>(program.Run);
         }
 
         public void Run(ConvertOptions options)
