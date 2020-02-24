@@ -1,0 +1,26 @@
+language: bash
+os: windows
+env:
+  - >
+    MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin"
+    SEVENZIP_PATH="C:\Program Files\7-Zip"
+install:
+  - choco install nuget.commandline
+  - nuget restore SilkRau.sln
+script:
+  - export PATH="$MSBUILD_PATH:$SEVENZIP_PATH:$PATH"
+  - MSBuild.exe //p:Configuration=Release SilkRau.sln
+  - packages/NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe ./SilkRau.Tests/bin/Release/SilkRau.Tests.dll
+  - |-
+    if [ $TRAVIS_TAG ]; then
+      pushd SilkRau/bin/Release
+      7z.exe a -tzip ../../../SilkRau.$TRAVIS_TAG.zip silkrau.exe* *dll
+      popd
+    fi
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB_KEY
+  file: SilkRau.$TRAVIS_TAG.zip
+  on:
+    tags: true
