@@ -71,6 +71,7 @@
     <Compile Include="IFileConverterFactory.cs" />
     <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
+    <Compile Include="Ninject\FileConvertersModule.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
     <Compile Include="Options\PrintOptions.cs" />
     <Compile Include="Program.cs" />
