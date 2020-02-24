@@ -15,12 +15,16 @@ namespace SilkRau
 
         private readonly IFileConverterFactory fileConverterFactory;
 
+        private readonly TextWriter textWriter;
+
         public Program(
             IFileTypeRegistry fileTypeRegistry,
-            IFileConverterFactory fileConverterFactory
+            IFileConverterFactory fileConverterFactory,
+            TextWriter textWriter
         ) {
             this.fileTypeRegistry = fileTypeRegistry;
             this.fileConverterFactory = fileConverterFactory;
+            this.textWriter = textWriter;
         }
 
         static void Main(string[] args)
@@ -55,6 +59,27 @@ namespace SilkRau
             else if (FileFormat.Yaml == fileFormat)
             {
                 return "yaml";
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public void Run(PrintOptions options)
+        {
+            if (options.FileTypes)
+            {
+                foreach (string fileType in fileTypeRegistry.SupportedFileTypes)
+                {
+                    textWriter.WriteLine(fileType);
+                }
+            }
+            else if (options.Conversions)
+            {
+                foreach (FileConversion fileConversion in fileConverterFactory.ValidConversions)
+                {
+                    textWriter.WriteLine($"{fileConversion.InputFileFormat} to {fileConversion.OutputFileFormat}");
+                }
             }
             else
             {
