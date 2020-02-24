@@ -72,6 +72,7 @@
     <Compile Include="IFileTypeRegistry.cs" />
     <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
+    <Compile Include="Ninject\CommandLineModule.cs" />
     <Compile Include="Ninject\FileConvertersModule.cs" />
     <Compile Include="Ninject\ProgramModule.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
