@@ -6,29 +6,50 @@
 using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace SilkRau.Tests
 {
     class FileTypeRegistryTests
     {
         [Test]
+        public void Test_Getting_The_Supported_Types()
+        {
+            IReadOnlyDictionary<string, Type> mapping = new Dictionary<string, Type>
+            {
+                ["type1"] = typeof(int),
+                ["type2"] = typeof(string),
+                ["type3"] = typeof(Type)
+            };
+            IFileTypeRegistry registry = new FileTypeRegistry(mapping);
+
+            ISet<string> result = registry.SupportedFileTypes;
+
+            result.Should().Equal(mapping.Keys);
+        }
+
+        [Test]
         public void Test_Getting_The_Type_From_A_Valid_FileType()
         {
-             string supportedFileType = FileTypeRegistry
-                .SupportedFileTypes
-                .First();
+            string registryName = nameof(registryName);
+            IReadOnlyDictionary<string, Type> mapping = new Dictionary<string, Type>
+            {
+                [registryName] = typeof(IFileTypeRegistry)
+            };
 
-            Type result = FileTypeRegistry.GetTypeForFileType(supportedFileType);
+            IFileTypeRegistry registry = new FileTypeRegistry(mapping);
 
-            result.Should().NotBeNull();
+            Type result = registry.GetTypeForFileType(registryName);
+
+            result.Should().Be(typeof(IFileTypeRegistry));
         }
 
         [Test]
         public void Test_Getting_The_Type_From_An_Invalid_FileType()
         {
             string invalidFileType = nameof(invalidFileType);
-            Action action = () => FileTypeRegistry.GetTypeForFileType(invalidFileType);
+            IFileTypeRegistry registry = new FileTypeRegistry(new Dictionary<string, Type>());
+            Action action = () => registry.GetTypeForFileType(invalidFileType);
 
             action.Should()
                 .ThrowExactly<InvalidFileTypeException>()
