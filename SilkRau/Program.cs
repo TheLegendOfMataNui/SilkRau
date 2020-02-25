@@ -34,6 +34,7 @@ namespace SilkRau
         {
             IKernel kernel = new StandardKernel(
                 new CommandLineModule(),
+                new SAGESharpModule(),
                 new FileConvertersModule(),
                 new ProgramModule()
             );
