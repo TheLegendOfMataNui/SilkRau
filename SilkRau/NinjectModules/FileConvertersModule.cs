@@ -15,7 +15,7 @@ using System.Reflection;
 
 using ProvidersDictionary = System.Collections.Generic.IReadOnlyDictionary<SilkRau.FileConversion, SilkRau.FileConverterProvider>;
 
-namespace SilkRau.Ninject
+namespace SilkRau.NinjectModules
 {
     internal sealed class FileConvertersModule : NinjectModule
     {

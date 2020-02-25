@@ -5,7 +5,7 @@
  */
 using CommandLine;
 using Ninject;
-using SilkRau.Ninject;
+using SilkRau.NinjectModules;
 using SilkRau.Options;
 using System;
 using System.IO;
