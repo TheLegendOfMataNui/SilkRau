@@ -7,7 +7,7 @@ using Ninject.Modules;
 using System;
 using System.Collections.Generic;
 
-namespace SilkRau.Ninject
+namespace SilkRau.NinjectModules
 {
     internal sealed class ProgramModule : NinjectModule
     {

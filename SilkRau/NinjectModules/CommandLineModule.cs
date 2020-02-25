@@ -8,7 +8,7 @@ using Ninject.Modules;
 using System;
 using System.IO;
 
-namespace SilkRau.Ninject
+namespace SilkRau.NinjectModules
 {
     internal sealed class CommandLineModule : NinjectModule
     {
