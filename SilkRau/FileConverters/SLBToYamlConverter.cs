@@ -3,51 +3,71 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+using NUtils.Extensions;
 using SAGESharp.IO.Binary;
 using System;
+using System.IO;
 using YamlDotNet.Serialization;
 
 namespace SilkRau.FileConverters
 {
-    internal static class SLBToYamlConverter
-    {
-        public delegate TResult ReadBinaryFromFile<TResult>(string filePath, Func<IBinaryReader, TResult> function);
-
-        public delegate void WriteTextToFile(string filePath, string contents);
-    }
-
     internal sealed class SLBToYamlConverter<T> : IFileConverter
     {
         private readonly IBinarySerializer<T> slbSerializer;
 
         private readonly ISerializer yamlSerializer;
 
-        private readonly SLBToYamlConverter.ReadBinaryFromFile<T> readBinaryFromFile;
-
-        private readonly SLBToYamlConverter.WriteTextToFile writeTextToFile;
+        private readonly IIO io;
 
         public SLBToYamlConverter(
             IBinarySerializer<T> slbSerializer,
             ISerializer yamlSerializer,
-            SLBToYamlConverter.ReadBinaryFromFile<T> readBinaryFromFile,
-            SLBToYamlConverter.WriteTextToFile writeTextToFile
+            IIO io
         ) {
             this.slbSerializer = slbSerializer;
             this.yamlSerializer = yamlSerializer;
-            this.readBinaryFromFile = readBinaryFromFile;
-            this.writeTextToFile = writeTextToFile;
+            this.io = io;
         }
 
         public void Convert(string inputFilePath, string outputFilePath)
         {
-            T value = readBinaryFromFile(
+            T value = io.ReadBinaryFromFile(
                 filePath: inputFilePath,
                 function: binaryReader => slbSerializer.Read(binaryReader)
             );
 
             string yaml = yamlSerializer.Serialize(value);
 
-            writeTextToFile(filePath: outputFilePath, contents: yaml);
+            io.WriteTextToFile(filePath: outputFilePath, contents: yaml);
+        }
+
+        public interface IIO
+        {
+            T ReadBinaryFromFile(string filePath, Func<IBinaryReader, T> function);
+
+            void WriteTextToFile(string filePath, string contents);
+        }
+
+        internal sealed class IO : IIO
+        {
+            public T ReadBinaryFromFile(string filePath, Func<IBinaryReader, T> function)
+            {
+                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    return Reader.ForStream(stream).Let(function);
+                }
+            }
+
+            public void WriteTextToFile(string filePath, string contents)
+            {
+                using (Stream stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))
+                {
+                    using (TextWriter textWriter = new StreamWriter(stream))
+                    {
+                        textWriter.Write(contents);
+                    }
+                }
+            }
         }
     }
 }

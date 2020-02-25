@@ -42,28 +42,8 @@ namespace SilkRau.NinjectModules
             => new SLBToYamlConverter<T>(
                 slbSerializer: BinarySerializer.ForType<T>(),
                 yamlSerializer: YamlSerializer.BuildSLBSerializer(),
-                readBinaryFromFile: ReadBinaryFromFile,
-                writeTextToFile: WriteTextToFile
+                io: new SLBToYamlConverter<T>.IO()
             );
-
-        private static T ReadBinaryFromFile<T>(string filePath, Func<IBinaryReader, T> function)
-        {
-            using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                return Reader.ForStream(stream).Let(function);
-            }
-        }
-
-        private static void WriteTextToFile(string filePath, string contents)
-        {
-            using (Stream stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))
-            {
-                using (TextWriter textWriter = new StreamWriter(stream))
-                {
-                    textWriter.Write(contents);
-                }
-            }
-        }
 
         public static IFileConverter BuildYamlToSLBConverter(Type fileType)
         {
