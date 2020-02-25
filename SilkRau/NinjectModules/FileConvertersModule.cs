@@ -3,15 +3,12 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
+using Ninject;
+using Ninject.Activation;
 using Ninject.Modules;
-using SAGESharp.IO.Binary;
-using SAGESharp.IO.Yaml;
 using SilkRau.FileConverters;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-
-using ProvidersDictionary = System.Collections.Generic.IReadOnlyDictionary<SilkRau.FileConversion, SilkRau.FileConverterProvider>;
 
 namespace SilkRau.NinjectModules
 {
@@ -19,43 +16,36 @@ namespace SilkRau.NinjectModules
     {
         public override void Load()
         {
-            Bind<ProvidersDictionary>().ToConstant(BuildProvidersDictionary());
+            Bind(typeof(SLBToYamlConverter<>)).ToSelf();
+            Bind(typeof(SLBToYamlConverter<>.IIO)).To(typeof(SLBToYamlConverter<>.IO));
+
+            Bind(typeof(YamlToSLBConverter<>)).ToSelf();
+            Bind(typeof(YamlToSLBConverter<>.IIO)).To(typeof(YamlToSLBConverter<>.IO));
+
+            Bind<IReadOnlyDictionary<FileConversion, FileConverterProvider>>().ToMethod(BuildProvidersDictionary);
         }
 
-        private static ProvidersDictionary BuildProvidersDictionary() => new Dictionary<FileConversion, FileConverterProvider>
+        private IReadOnlyDictionary<FileConversion, FileConverterProvider> BuildProvidersDictionary(IContext context)
         {
-            [new FileConversion(inputFileFormat: FileFormat.SLB, outputFileFormat: FileFormat.Yaml)] = BuildSLBToYamlConverter,
-            [new FileConversion(inputFileFormat: FileFormat.Yaml, outputFileFormat: FileFormat.SLB)] = BuildYamlToSLBConverter
-        };
+            IKernel kernel = context.Kernel;
+            IFileConverter buildFileConverterWithType(Type fileConverterType)
+                => (IFileConverter)kernel.Get(fileConverterType);
 
-        private static IFileConverter BuildSLBToYamlConverter(Type fileType)
-        {
-            return (IFileConverter)typeof(FileConverterFactory)
-                .GetMethod(nameof(BuildTypedSLBToYamlConverter), BindingFlags.NonPublic | BindingFlags.Static)
-                .MakeGenericMethod(fileType)
-                .Invoke(null, Array.Empty<object>());
+            return new Dictionary<FileConversion, FileConverterProvider>
+            {
+                [
+                    new FileConversion(
+                        inputFileFormat: FileFormat.SLB,
+                        outputFileFormat: FileFormat.Yaml
+                    )
+                ] = fileType => buildFileConverterWithType(typeof(SLBToYamlConverter<>).MakeGenericType(fileType)),
+                [
+                    new FileConversion(
+                        inputFileFormat: FileFormat.Yaml,
+                        outputFileFormat: FileFormat.SLB
+                    )
+                ] = fileType => buildFileConverterWithType(typeof(YamlToSLBConverter<>).MakeGenericType(fileType))
+            };
         }
-
-        private static SLBToYamlConverter<T> BuildTypedSLBToYamlConverter<T>()
-            => new SLBToYamlConverter<T>(
-                slbSerializer: BinarySerializer.ForType<T>(),
-                yamlSerializer: YamlSerializer.BuildSLBSerializer(),
-                io: new SLBToYamlConverter<T>.IO()
-            );
-
-        public static IFileConverter BuildYamlToSLBConverter(Type fileType)
-        {
-            return (IFileConverter)typeof(FileConverterFactory)
-                .GetMethod(nameof(BuildTypedYamlToSLBConverter), BindingFlags.NonPublic | BindingFlags.Static)
-                .MakeGenericMethod(fileType)
-                .Invoke(null, Array.Empty<object>());
-        }
-
-        private static YamlToSLBConverter<T> BuildTypedYamlToSLBConverter<T>()
-            => new YamlToSLBConverter<T>(
-                yamlDeserializer: YamlDeserializer.BuildSLBDeserializer(),
-                slbSerializer: BinarySerializer.ForType<T>(),
-                io: new YamlToSLBConverter<T>.IO()
-            );
     }
 }
