@@ -20,11 +20,8 @@ namespace SilkRau.Tests.FileConverters
         private readonly IBinarySerializer<object> slbSerializer
             = Substitute.For<IBinarySerializer<object>>();
 
-        private readonly YamlToSLBConverter.ReadTextFromFile readTextFromFile
-            = Substitute.For<YamlToSLBConverter.ReadTextFromFile>();
-
-        private readonly YamlToSLBConverter.WriteBinaryToFile writeBinaryToFile
-            = Substitute.For<YamlToSLBConverter.WriteBinaryToFile>();
+        private readonly YamlToSLBConverter<object>.IIO io
+            = Substitute.For<YamlToSLBConverter<object>.IIO>();
 
         private readonly IFileConverter fileConverter;
 
@@ -33,8 +30,7 @@ namespace SilkRau.Tests.FileConverters
             fileConverter = new YamlToSLBConverter<object>(
                 yamlDeserializer,
                 slbSerializer,
-                readTextFromFile,
-                writeBinaryToFile
+                io
             );
         }
 
@@ -47,9 +43,9 @@ namespace SilkRau.Tests.FileConverters
             string outputFileName = nameof(outputFileName);
             string contents = nameof(contents);
 
-            readTextFromFile.Invoke(inputFileName).Returns(contents);
+            io.ReadTextFromFile(inputFileName).Returns(contents);
             yamlDeserializer.Deserialize<object>(contents).Returns(value);
-            writeBinaryToFile.Invoke(
+            io.WriteBinaryToFile(
                 fileName: Arg.Is(outputFileName),
                 action: Arg.Do<Action<IBinaryWriter>>(action => action(binaryWriter))
             );
