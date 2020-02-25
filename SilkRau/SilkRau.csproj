@@ -75,6 +75,7 @@
     <Compile Include="NinjectModules\CommandLineModule.cs" />
     <Compile Include="NinjectModules\FileConvertersModule.cs" />
     <Compile Include="NinjectModules\ProgramModule.cs" />
+    <Compile Include="NinjectModules\SAGESharpModule.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
     <Compile Include="Options\PrintOptions.cs" />
     <Compile Include="Program.cs" />
