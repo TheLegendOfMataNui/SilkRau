@@ -4,13 +4,11 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 using Ninject.Modules;
-using NUtils.Extensions;
 using SAGESharp.IO.Binary;
 using SAGESharp.IO.Yaml;
 using SilkRau.FileConverters;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 
 using ProvidersDictionary = System.Collections.Generic.IReadOnlyDictionary<SilkRau.FileConversion, SilkRau.FileConverterProvider>;
@@ -57,27 +55,7 @@ namespace SilkRau.NinjectModules
             => new YamlToSLBConverter<T>(
                 yamlDeserializer: YamlDeserializer.BuildSLBDeserializer(),
                 slbSerializer: BinarySerializer.ForType<T>(),
-                readTextFromFile: ReadTextFromFile,
-                writeBinaryToFile: WriteBinaryToFile
+                io: new YamlToSLBConverter<T>.IO()
             );
-
-        private static string ReadTextFromFile(string filePath)
-        {
-            using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                using (TextReader textReader = new StreamReader(stream))
-                {
-                    return textReader.ReadToEnd();
-                }
-            }
-        }
-
-        private static void WriteBinaryToFile(string filePath, Action<IBinaryWriter> action)
-        {
-            using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Write))
-            {
-                action(Writer.ForStream(stream));
-            }
-        }
     }
 }

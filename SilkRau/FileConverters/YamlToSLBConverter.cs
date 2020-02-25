@@ -5,49 +5,68 @@
  */
 using SAGESharp.IO.Binary;
 using System;
+using System.IO;
 using YamlDotNet.Serialization;
 
 namespace SilkRau.FileConverters
 {
-    internal static class YamlToSLBConverter
-    {
-        public delegate string ReadTextFromFile(string filePath);
-
-        public delegate void WriteBinaryToFile(string fileName, Action<IBinaryWriter> action);
-    }
-
     internal sealed class YamlToSLBConverter<T> : IFileConverter
     {
         private readonly IDeserializer yamlDeserializer;
 
         private readonly IBinarySerializer<T> slbSerializer;
 
-        private readonly YamlToSLBConverter.ReadTextFromFile readTextFromFile;
-
-        private readonly YamlToSLBConverter.WriteBinaryToFile writeBinaryToFile;
+        private readonly IIO io;
 
         public YamlToSLBConverter(
             IDeserializer yamlDeserializer,
             IBinarySerializer<T> slbSerializer,
-            YamlToSLBConverter.ReadTextFromFile readTextFromFile,
-            YamlToSLBConverter.WriteBinaryToFile writeBinaryToFile
+            IIO io
         ) {
             this.yamlDeserializer = yamlDeserializer;
             this.slbSerializer = slbSerializer;
-            this.readTextFromFile = readTextFromFile;
-            this.writeBinaryToFile = writeBinaryToFile;
+            this.io = io;
         }
 
         public void Convert(string inputFilePath, string outputFilePath)
         {
-            string contents = readTextFromFile(inputFilePath);
+            string contents = io.ReadTextFromFile(inputFilePath);
 
             T value = yamlDeserializer.Deserialize<T>(contents);
 
-            writeBinaryToFile(
+            io.WriteBinaryToFile(
                 fileName: outputFilePath,
                 action: binaryWriter => slbSerializer.Write(binaryWriter, value)
             );
+        }
+
+        public interface IIO
+        {
+            string ReadTextFromFile(string filePath);
+
+            void WriteBinaryToFile(string fileName, Action<IBinaryWriter> action);
+        }
+
+        internal sealed class IO : IIO
+        {
+            public string ReadTextFromFile(string filePath)
+            {
+                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (TextReader textReader = new StreamReader(stream))
+                    {
+                        return textReader.ReadToEnd();
+                    }
+                }
+            }
+
+            public void WriteBinaryToFile(string filePath, Action<IBinaryWriter> action)
+            {
+                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Write))
+                {
+                    action(Writer.ForStream(stream));
+                }
+            }
         }
     }
 }
