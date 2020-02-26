@@ -35,5 +35,11 @@ namespace SilkRau
         public override int GetHashCode() => equalityComparer.GetHashCode(this);
 
         public override string ToString() => toStringMethod(this);
+
+        public static bool operator ==(FileConversion left, FileConversion right)
+            => left?.Equals(right) ?? right?.Equals(left) ?? true;
+
+        public static bool operator !=(FileConversion left, FileConversion right)
+            => !(left == right);
     }
 }
