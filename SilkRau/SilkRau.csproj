@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BadFormatException.cs" />
     <Compile Include="FileConversion.cs" />
     <Compile Include="FileConverterFactory.cs" />
     <Compile Include="FileConverters\SLBToYamlConverter.cs" />
