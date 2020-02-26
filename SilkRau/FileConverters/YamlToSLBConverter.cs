@@ -6,6 +6,7 @@
 using SAGESharp.IO.Binary;
 using System;
 using System.IO;
+using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 
 namespace SilkRau.FileConverters
@@ -32,7 +33,15 @@ namespace SilkRau.FileConverters
         {
             string contents = io.ReadTextFromFile(inputFilePath);
 
-            T value = yamlDeserializer.Deserialize<T>(contents);
+            T value;
+            try
+            {
+                value = yamlDeserializer.Deserialize<T>(contents);
+            }
+            catch (YamlException exception)
+            {
+                throw new BadFormatException($"{inputFilePath} has an invalid format", exception);
+            }
 
             io.WriteBinaryToFile(
                 fileName: outputFilePath,
