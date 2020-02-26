@@ -57,6 +57,10 @@ namespace SilkRau
                 action();
                 return 0;
             }
+            catch (SilkRauException exception)
+            {
+                Console.Error.WriteLine(exception.Message);
+            }
             catch (Exception exception)
             {
                 Console.Error.WriteLine($"Fatal, unexpected error: ${exception.Message}");
