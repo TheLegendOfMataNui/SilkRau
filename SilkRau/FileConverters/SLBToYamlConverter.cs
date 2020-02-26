@@ -68,7 +68,7 @@ namespace SilkRau.FileConverters
 
             public void WriteTextToFile(string filePath, string contents)
             {
-                using (Stream stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))
+                using (Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
                     using (TextWriter textWriter = new StreamWriter(stream))
                     {
