@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 using NSubstitute;
+using NSubstitute.ClearExtensions;
 using NUnit.Framework;
 using SilkRau.Options;
 using System;
@@ -20,6 +21,8 @@ namespace SilkRau.Tests
 
         private readonly TextWriter textWriter;
 
+        private readonly IPathValidator pathValidator;
+
         private readonly Program program;
 
         public ProgramTests()
@@ -27,7 +30,22 @@ namespace SilkRau.Tests
             fileTypeRegistry = Substitute.For<IFileTypeRegistry>();
             fileConverterFactory = Substitute.For<IFileConverterFactory>();
             textWriter = Substitute.For<TextWriter>();
-            program = new Program(fileTypeRegistry, fileConverterFactory, textWriter);
+            pathValidator = Substitute.For<IPathValidator>();
+            program = new Program(
+                fileTypeRegistry,
+                fileConverterFactory,
+                textWriter,
+                pathValidator
+            );
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            fileTypeRegistry.ClearSubstitute();
+            fileConverterFactory.ClearSubstitute();
+            textWriter.ClearSubstitute();
+            pathValidator.ClearSubstitute();
         }
 
         [Test]
@@ -53,6 +71,34 @@ namespace SilkRau.Tests
 
             program.Run(options);
 
+            pathValidator.Received().ValidateFileDoesNotExist(options.OutputFile);
+            fileConverter.Received().Convert(options.InputFile, options.OutputFile);
+        }
+
+        [Test]
+        public void Test_Running_A_Program_For_Converting_A_File_With_Output_Ignoring_Validations()
+        {
+            ConvertOptions options = new ConvertOptions(
+                fileType: "fileType",
+                inputFormat: FileFormat.SLB,
+                inputFile: "inputFile.slb",
+                outputFormat: FileFormat.Yaml,
+                outputFile: "outputFile.yaml",
+                force: true
+            );
+            FileConversion fileConversion = new FileConversion(
+                inputFileFormat: options.InputFormat,
+                outputFileFormat: options.OutputFormat
+            );
+            Type fileType = typeof(string);
+            IFileConverter fileConverter = Substitute.For<IFileConverter>();
+
+            fileTypeRegistry.GetTypeForFileType(options.FileType).Returns(fileType);
+            fileConverterFactory.BuildFileConverter(Arg.Is(fileType), Arg.Is(fileConversion)).Returns(fileConverter);
+
+            program.Run(options);
+
+            pathValidator.DidNotReceive().ValidateFileDoesNotExist(options.OutputFile);
             fileConverter.Received().Convert(options.InputFile, options.OutputFile);
         }
 
@@ -80,6 +126,7 @@ namespace SilkRau.Tests
 
             program.Run(options);
 
+            pathValidator.Received().ValidateFileDoesNotExist(options.OutputFile);
             fileConverter.Received().Convert(options.InputFile, $"{fileName}.yaml");
         }
 

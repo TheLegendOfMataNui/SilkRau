@@ -73,6 +73,7 @@
     <Compile Include="IFileTypeRegistry.cs" />
     <Compile Include="InvalidConversionException.cs" />
     <Compile Include="InvalidFileTypeException.cs" />
+    <Compile Include="IPathValidator.cs" />
     <Compile Include="NinjectModules\CommandLineModule.cs" />
     <Compile Include="NinjectModules\FileConvertersModule.cs" />
     <Compile Include="NinjectModules\ProgramModule.cs" />
