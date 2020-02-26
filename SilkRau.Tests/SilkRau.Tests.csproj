@@ -79,6 +79,7 @@
     <Compile Include="FileConverters\SLBToYamlConverterTests.cs" />
     <Compile Include="FileConverters\YamlToSLBConverterTests.cs" />
     <Compile Include="FileTypeRegistryTests.cs" />
+    <Compile Include="PathValidatorTests.cs" />
     <Compile Include="ProgramTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
