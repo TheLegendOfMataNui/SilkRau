@@ -20,14 +20,18 @@ namespace SilkRau
 
         private readonly TextWriter textWriter;
 
+        private readonly IPathValidator pathValidator;
+
         public Program(
             IFileTypeRegistry fileTypeRegistry,
             IFileConverterFactory fileConverterFactory,
-            TextWriter textWriter
+            TextWriter textWriter,
+            IPathValidator pathValidator
         ) {
             this.fileTypeRegistry = fileTypeRegistry;
             this.fileConverterFactory = fileConverterFactory;
             this.textWriter = textWriter;
+            this.pathValidator = pathValidator;
         }
 
         private static int Main(string[] args)
@@ -72,6 +76,11 @@ namespace SilkRau
 
         public void Run(ConvertOptions options)
         {
+            if (!options.Force)
+            {
+                pathValidator.ValidateFileDoesNotExist(options.OutputFile);
+            }
+
             IFileConverter fileConverter = fileConverterFactory.BuildFileConverter(
                 fileType: fileTypeRegistry.GetTypeForFileType(options.FileType),
                 fileConversion: new FileConversion(
