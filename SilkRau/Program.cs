@@ -30,7 +30,7 @@ namespace SilkRau
             this.textWriter = textWriter;
         }
 
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
             IKernel kernel = new StandardKernel(
                 new CommandLineModule(),
@@ -42,9 +42,28 @@ namespace SilkRau
             Program program = kernel.Get<Program>();
             Parser parser = kernel.Get<Parser>();
 
-            parser.ParseArguments<ConvertOptions, PrintOptions>(args)
-                .WithParsed<ConvertOptions>(program.Run)
-                .WithParsed<PrintOptions>(program.Run);
+            return parser.ParseArguments<ConvertOptions, PrintOptions>(args)
+                .MapResult<ConvertOptions, PrintOptions, int>(
+                    options => HandleErrors(() => program.Run(options)),
+                    options => HandleErrors(() => program.Run(options)),
+                    _ => 2 // This happens if bad arguments are passed
+                );
+        }
+
+        private static int HandleErrors(Action action)
+        {
+            try
+            {
+                action();
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                Console.Error.WriteLine($"Fatal, unexpected error: ${exception.Message}");
+                Console.Error.WriteLine(exception.StackTrace);
+            }
+
+            return -1;
         }
 
         public void Run(ConvertOptions options)
