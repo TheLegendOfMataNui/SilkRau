@@ -7,7 +7,7 @@ using System;
 
 namespace SilkRau
 {
-    internal sealed class BadFormatException : Exception
+    internal sealed class BadFormatException : SilkRauException
     {
         public BadFormatException(string message, Exception inner)
             : base(message, inner)
