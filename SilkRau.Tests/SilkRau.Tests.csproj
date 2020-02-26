@@ -78,6 +78,7 @@
     <Compile Include="FileConverterFactoryTests.cs" />
     <Compile Include="FileConverters\SLBToYamlConverterIOTests.cs" />
     <Compile Include="FileConverters\SLBToYamlConverterTests.cs" />
+    <Compile Include="FileConverters\YamlToSLBConverterIOTests.cs" />
     <Compile Include="FileConverters\YamlToSLBConverterTests.cs" />
     <Compile Include="FileTypeRegistryTests.cs" />
     <Compile Include="PathValidatorTests.cs" />
