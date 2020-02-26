@@ -38,7 +38,8 @@ namespace SilkRau.Tests
                 inputFormat: FileFormat.SLB,
                 inputFile: "inputFile.slb",
                 outputFormat: FileFormat.Yaml,
-                outputFile: "outputFile.yaml"
+                outputFile: "outputFile.yaml",
+                force: false
             );
             FileConversion fileConversion = new FileConversion(
                 inputFileFormat: options.InputFormat,
@@ -64,7 +65,8 @@ namespace SilkRau.Tests
                 inputFormat: FileFormat.SLB,
                 inputFile: $"{fileName}.slb",
                 outputFormat: FileFormat.Yaml,
-                outputFile: null
+                outputFile: null,
+                force: false
             );
             FileConversion fileConversion = new FileConversion(
                 inputFileFormat: options.InputFormat,
