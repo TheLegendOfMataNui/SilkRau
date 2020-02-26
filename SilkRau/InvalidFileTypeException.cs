@@ -7,7 +7,7 @@ using System;
 
 namespace SilkRau
 {
-    internal sealed class InvalidFileTypeException : Exception
+    internal sealed class InvalidFileTypeException : SilkRauException
     {
         public InvalidFileTypeException(string invalidFileType)
             : base($"\"{invalidFileType}\" is not a valid file type")

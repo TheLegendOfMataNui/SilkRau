@@ -7,7 +7,7 @@ using System;
 
 namespace SilkRau
 {
-    internal sealed class InvalidConversionException : Exception
+    internal sealed class InvalidConversionException : SilkRauException
     {
         public InvalidConversionException(FileConversion fileConversion)
             : base($"Invalid conversion from {fileConversion.InputFileFormat} to {fileConversion.OutputFileFormat}")
