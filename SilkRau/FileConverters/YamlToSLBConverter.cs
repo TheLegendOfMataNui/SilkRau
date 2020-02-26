@@ -71,7 +71,7 @@ namespace SilkRau.FileConverters
 
             public void WriteBinaryToFile(string filePath, Action<IBinaryWriter> action)
             {
-                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Write))
+                using (Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
                     action(Writer.ForStream(stream));
                 }
