@@ -31,10 +31,18 @@ namespace SilkRau.FileConverters
 
         public void Convert(string inputFilePath, string outputFilePath)
         {
-            T value = io.ReadBinaryFromFile(
-                filePath: inputFilePath,
-                function: binaryReader => slbSerializer.Read(binaryReader)
-            );
+            T value;
+            try
+            {
+                value = io.ReadBinaryFromFile(
+                    filePath: inputFilePath,
+                    function: binaryReader => slbSerializer.Read(binaryReader)
+                );
+            }
+            catch (EndOfStreamException exception)
+            {
+                throw new BadFormatException($"{inputFilePath} has an invalid format", exception);
+            }
 
             string yaml = yamlSerializer.Serialize(value);
 
