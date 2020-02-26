@@ -21,6 +21,10 @@ namespace SilkRau.NinjectModules
                 .To<FileConverterFactory>()
                 .InSingletonScope();
 
+            Bind<IPathValidator>()
+                .To<PathValidator>()
+                .InSingletonScope();
+
             Bind<Program>()
                 .ToSelf()
                 .InSingletonScope();

@@ -80,9 +80,11 @@
     <Compile Include="NinjectModules\SAGESharpModule.cs" />
     <Compile Include="Options\ConvertOptions.cs" />
     <Compile Include="Options\PrintOptions.cs" />
+    <Compile Include="PathValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SilkRauException.cs" />
+    <Compile Include="ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
