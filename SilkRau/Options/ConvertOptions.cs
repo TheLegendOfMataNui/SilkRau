@@ -10,13 +10,20 @@ namespace SilkRau.Options
     [Verb("convert", HelpText = "Converts a file from a format to another.")]
     internal sealed class ConvertOptions
     {
-        public ConvertOptions(string fileType, FileFormat inputFormat, string inputFile, FileFormat outputFormat, string outputFile)
-        {
+        public ConvertOptions(
+            string fileType,
+            FileFormat inputFormat,
+            string inputFile,
+            FileFormat outputFormat,
+            string outputFile,
+            bool force
+        ) {
             FileType = fileType;
             InputFormat = inputFormat;
             InputFile = inputFile;
             OutputFormat = outputFormat;
             OutputFile = outputFile;
+            Force = force;
         }
 
         [Option('t', "file-type", Required = true, HelpText = "The type of the file to convert.")]
@@ -33,5 +40,8 @@ namespace SilkRau.Options
 
         [Option('o', "output-file", Required = false, HelpText = "The path of the output file.")]
         public string OutputFile { get; }
+
+        [Option('f', "force", Required = false, HelpText = "Forces the conversion despite any warnings.")]
+        public bool Force { get; }
     }
 }
