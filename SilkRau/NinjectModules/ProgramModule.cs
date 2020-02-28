@@ -4,6 +4,7 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 using Ninject.Modules;
+using NUtils.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -11,11 +12,23 @@ namespace SilkRau.NinjectModules
 {
     internal sealed class ProgramModule : NinjectModule
     {
+        private readonly IReadOnlyDictionary<string, Type> fileTypeMapping;
+
+        public ProgramModule()
+        {
+            fileTypeMapping = BuildDefaultFileTypeMapping();
+        }
+
+        public ProgramModule(IReadOnlyDictionary<string, Type> fileTypeMapping)
+        {
+            this.fileTypeMapping = new Dictionary<string, Type>()
+                .Also(it => fileTypeMapping.ForEach(it.Add));
+        }
+
         public override void Load()
         {
             Bind<IFileTypeRegistry>()
-                .ToConstant(BuildFileTypeRegistry())
-                .InSingletonScope();
+                .ToConstant(new FileTypeRegistry(fileTypeMapping));
 
             Bind<IFileConverterFactory>()
                 .To<FileConverterFactory>()
@@ -30,14 +43,9 @@ namespace SilkRau.NinjectModules
                 .InSingletonScope();
         }
 
-        private IFileTypeRegistry BuildFileTypeRegistry()
+        private static IReadOnlyDictionary<string, Type> BuildDefaultFileTypeMapping() => new Dictionary<string, Type>
         {
-            IReadOnlyDictionary<string, Type> mapping = new Dictionary<string, Type>
-            {
-                ["SLB.Level.Conversation"] = typeof(SAGESharp.SLB.Level.Conversation.CharacterTable)
-            };
-
-            return new FileTypeRegistry(mapping);
-        }
+            ["SLB.Level.Conversation"] = typeof(SAGESharp.SLB.Level.Conversation.CharacterTable)
+        };
     }
 }
