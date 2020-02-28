@@ -25,7 +25,7 @@ namespace SilkRau.Tests.FileConverters
         public void Test_Writing_To_An_Existing_File()
         {
             byte[] expected = GetBinaryFileContents();
-            string path = Path.GetTempFileName();
+            string path = FileManager.CreateFile("existing_file");
 
             File.WriteAllBytes(path, Encoding.ASCII.GetBytes("This should be gone"));
 
@@ -40,7 +40,7 @@ namespace SilkRau.Tests.FileConverters
         public void Test_Writing_To_An_Non_Existing_File()
         {
             byte[] expected = GetBinaryFileContents();
-            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string path = FileManager.GetPathForFile("new_file");
 
             io.WriteBinaryToFile(path, binaryWriter => binaryWriter.WriteBytes(expected));
 
