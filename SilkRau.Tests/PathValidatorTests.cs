@@ -22,7 +22,7 @@ namespace SilkRau.Tests
         [Test]
         public void Test_Validate_An_Inexisting_File_Does_Not_Exist()
         {
-            string path = $"{Assembly.GetExecutingAssembly().Location}.doesnt_exist";
+            string path = FileManager.GetPathForFile("file_doesnt_exists");
             Action action = () => pathValidator.ValidateFileDoesNotExist(path);
 
             action.Should()
@@ -32,7 +32,7 @@ namespace SilkRau.Tests
         [Test]
         public void Test_Validate_An_Existing_File_Does_Not_Exist()
         {
-            string path = Assembly.GetExecutingAssembly().Location;
+            string path = FileManager.CreateFile("file_exists");
             Action action = () => pathValidator.ValidateFileDoesNotExist(path);
 
             action.Should()

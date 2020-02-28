@@ -80,6 +80,7 @@
     <Compile Include="FileConverters\SLBToYamlConverterTests.cs" />
     <Compile Include="FileConverters\YamlToSLBConverterIOTests.cs" />
     <Compile Include="FileConverters\YamlToSLBConverterTests.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="FileTypeRegistryTests.cs" />
     <Compile Include="PathValidatorTests.cs" />
     <Compile Include="ProgramTests.cs" />

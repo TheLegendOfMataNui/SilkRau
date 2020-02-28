@@ -24,7 +24,7 @@ namespace SilkRau.Tests.FileConverters
         public void Test_Writing_To_An_Existing_File()
         {
             string expected = GetTextFileContents();
-            string path = Path.GetTempFileName();
+            string path = FileManager.CreateFile("existing_file");
 
             File.WriteAllText(path, "this should be gone");
 
@@ -39,7 +39,7 @@ namespace SilkRau.Tests.FileConverters
         public void Test_Writing_To_An_Non_Existing_File()
         {
             string expected = GetTextFileContents();
-            string path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string path = FileManager.GetPathForFile("new_file");
 
             io.WriteTextToFile(path, expected);
 
