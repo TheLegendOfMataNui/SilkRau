@@ -76,9 +76,12 @@ namespace SilkRau
 
         public void Run(ConvertOptions options)
         {
+            string outputFile = options.OutputFile ??
+                Path.ChangeExtension(options.InputFile, GetExtensionForFormat(options.OutputFormat));
+
             if (!options.Force)
             {
-                pathValidator.ValidateFileDoesNotExist(options.OutputFile);
+                pathValidator.ValidateFileDoesNotExist(outputFile);
             }
 
             IFileConverter fileConverter = fileConverterFactory.BuildFileConverter(
@@ -88,9 +91,6 @@ namespace SilkRau
                     outputFileFormat: options.OutputFormat
                 )
             );
-
-            string outputFile = options.OutputFile ??
-                Path.ChangeExtension(options.InputFile, GetExtensionForFormat(options.OutputFormat));
 
             fileConverter.Convert(
                  inputFilePath: options.InputFile,

@@ -126,8 +126,10 @@ namespace SilkRau.Tests
 
             program.Run(options);
 
-            pathValidator.Received().ValidateFileDoesNotExist(options.OutputFile);
-            fileConverter.Received().Convert(options.InputFile, $"{fileName}.yaml");
+            string outputFileName = $"{fileName}.yaml";
+
+            pathValidator.Received().ValidateFileDoesNotExist(outputFileName);
+            fileConverter.Received().Convert(options.InputFile, outputFileName);
         }
 
         [Test]
