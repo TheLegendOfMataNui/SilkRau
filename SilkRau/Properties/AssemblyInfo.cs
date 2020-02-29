@@ -35,5 +35,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.1.0")]
 [assembly: AssemblyFileVersion("0.1.0")]
 
+
+// The following lines make internal classes visible to tests and also
+// the mocking framework. We don't want the signed assembly to expose
+// any internal classes so that's guarded behind a macro.
+#if !SIGN
 [assembly: InternalsVisibleTo("SilkRau.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+#endif

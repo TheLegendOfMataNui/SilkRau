@@ -12,9 +12,10 @@ script:
   - MSBuild.exe //p:Configuration=Release SilkRau.sln
   - packages/NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe --where "cat != integration" ./SilkRau.Tests/bin/Release/SilkRau.Tests.dll
   - packages/NUnit.ConsoleRunner.3.11.1/tools/nunit3-console.exe --where "cat == integration" ./SilkRau.Tests/bin/Release/SilkRau.Tests.dll
+  - MSBuild.exe //p:Configuration="Release Signed" SilkRau.sln
   - |-
     if [ $TRAVIS_TAG ]; then
-      pushd SilkRau/bin/Release
+      pushd SilkRau/bin/Release\ Signed
       7z.exe a -tzip ../../../SilkRau.$TRAVIS_TAG.zip silkrau.exe* *dll
       popd
     fi
