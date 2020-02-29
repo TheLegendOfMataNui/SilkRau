@@ -48,30 +48,53 @@ namespace SilkRau
 
             return parser.ParseArguments<ConvertOptions, PrintOptions>(args)
                 .MapResult<ConvertOptions, PrintOptions, int>(
-                    options => HandleErrors(() => program.Run(options)),
-                    options => HandleErrors(() => program.Run(options)),
+                    options => HandleErrors(options, program.Run),
+                    options => HandleErrors(options, program.Run),
                     _ => 2 // This happens if bad arguments are passed
                 );
         }
 
-        private static int HandleErrors(Action action)
+        private static int HandleErrors<T>(T options, Action<T> action)
         {
             try
             {
-                action();
+                action(options);
                 return 0;
             }
             catch (SilkRauException exception)
             {
                 Console.Error.WriteLine(exception.Message);
+
+                if (exception is BadFormatException)
+                {
+                    DumpException(options, exception);
+                }
             }
             catch (Exception exception)
             {
                 Console.Error.WriteLine($"Fatal, unexpected error: ${exception.Message}");
                 Console.Error.WriteLine(exception.StackTrace);
+
+                DumpException(options, exception);
             }
 
             return -1;
+        }
+
+        private static void DumpException<T>(T options, Exception exception)
+        {
+            string dumpFileName = $"SilkRau.dump.{DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss-ffff")}";
+
+            Console.Error.WriteLine($"Created dump file {dumpFileName}");
+
+            string[] contents = new string[]
+            {
+                $"Failed to execute: {options}",
+                $"With message: {exception.Message}",
+                exception.StackTrace
+            };
+
+            File.WriteAllLines(path: dumpFileName, contents: contents);
         }
 
         public void Run(ConvertOptions options)
