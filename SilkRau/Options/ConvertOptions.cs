@@ -4,12 +4,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 using CommandLine;
+using NUtils.MethodBuilders;
 
 namespace SilkRau.Options
 {
     [Verb("convert", HelpText = "Converts a file from a format to another.")]
     internal sealed class ConvertOptions
     {
+        private static readonly ToStringMethod<ConvertOptions> toStringMethod
+            = new ToStringMethodBuilder<ConvertOptions>().UseProperties().Build();
+
         public ConvertOptions(
             string fileType,
             FileFormat inputFormat,
@@ -43,5 +47,7 @@ namespace SilkRau.Options
 
         [Option('f', "force", Required = false, HelpText = "Forces the conversion despite any warnings.")]
         public bool Force { get; }
+
+        public override string ToString() => toStringMethod(this);
     }
 }

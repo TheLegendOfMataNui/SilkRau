@@ -4,12 +4,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 using CommandLine;
+using NUtils.MethodBuilders;
 
 namespace SilkRau.Options
 {
     [Verb("print", HelpText = "Prints information about what operations are available.")]
     internal sealed class PrintOptions
     {
+        private static readonly ToStringMethod<PrintOptions> toStringMethod
+            = new ToStringMethodBuilder<PrintOptions>().UseProperties().Build();
+
         public PrintOptions(bool fileTypes, bool conversions)
         {
             FileTypes = fileTypes;
@@ -21,5 +25,7 @@ namespace SilkRau.Options
 
         [Option('c', "conversions", HelpText = "Prints all the supported conversions.", SetName = nameof(Conversions), Required = true)]
         public bool Conversions { get; }
+
+        public override string ToString() => toStringMethod(this);
     }
 }
