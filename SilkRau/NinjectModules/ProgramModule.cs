@@ -45,6 +45,8 @@ namespace SilkRau.NinjectModules
 
         private static IReadOnlyDictionary<string, Type> BuildDefaultFileTypeMapping() => new Dictionary<string, Type>
         {
+            ["SLB.Character.AnimationEvents"] = typeof(SAGESharp.SLB.Character.AnimationEvents.AnimationEventsTable),
+            ["SLB.Character.MoveList"] = typeof(SAGESharp.SLB.Character.MoveList.MoveListTable),
             ["SLB.Level.Conversation"] = typeof(SAGESharp.SLB.Level.Conversation.CharacterTable)
         };
     }
