@@ -62,8 +62,8 @@
     <Reference Include="NUtils, Version=1.2.0.0, Culture=neutral, PublicKeyToken=74055ef46d91ac56, processorArchitecture=MSIL">
       <HintPath>..\packages\NUtils.1.2.0\lib\netstandard2.0\NUtils.dll</HintPath>
     </Reference>
-    <Reference Include="SAGESharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=c57c503733505468, processorArchitecture=MSIL">
-      <HintPath>..\packages\SAGESharp.1.2.0\lib\net461\SAGESharp.dll</HintPath>
+    <Reference Include="SAGESharp, Version=1.2.1.0, Culture=neutral, PublicKeyToken=c57c503733505468, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAGESharp.1.2.1\lib\net461\SAGESharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
