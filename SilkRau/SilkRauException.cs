@@ -4,11 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 using System;
-using System.Runtime.Serialization;
 
 namespace SilkRau
 {
-    [Serializable]
     internal abstract class SilkRauException : Exception
     {
         public SilkRauException()
@@ -20,11 +18,6 @@ namespace SilkRau
         }
 
         public SilkRauException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected SilkRauException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }
