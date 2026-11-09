@@ -20,12 +20,11 @@
     <AssemblyOriginatorKeyFile>SilkRau.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.7.82" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Equ" Version="2.2.0" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="NUtils" Version="1.2.0" />
     <PackageReference Include="SAGESharp" Version="1.2.1" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
 </Project>
